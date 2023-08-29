@@ -4,12 +4,18 @@
 
 include $(TOPDIR)/rules.mk
 
-LUCI_TITLE:=LuCI support for DDNS-Go
+PKG_NAME:=luci-app-ddns-go
+PKG_VERSION:=1.3.2
+PKG_RELEASE:=10
+
+LUCI_TITLE:=LuCI Support for Dynamic ddns-go Client
 LUCI_DEPENDS:=+ddns-go
 LUCI_PKGARCH:=all
 
-PKG_MAINTAINER:=Tianling Shen <cnsztl@immortalwrt.org>
+define Package/$(PKG_NAME)/conffiles
+/etc/config/ddns-go
+/etc/ddns-go/ddns-go-config.yaml
+endef
 
-include ../../luci.mk
-
+include $(TOPDIR)/feeds/luci/luci.mk
 # call BuildPackage - OpenWrt buildroot signature
