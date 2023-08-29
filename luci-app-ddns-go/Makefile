@@ -12,10 +12,7 @@ LUCI_TITLE:=LuCI Support for Dynamic ddns-go Client
 LUCI_DEPENDS:=+ddns-go
 LUCI_PKGARCH:=all
 
-define Package/$(PKG_NAME)/conffiles
-/etc/config/ddns-go
-/etc/ddns-go/ddns-go-config.yaml
-endef
+PKG_MAINTAINER:=Tianling Shen <cnsztl@immortalwrt.org>
 
-include $(TOPDIR)/feeds/luci/luci.mk
+include ../../luci.mk
 # call BuildPackage - OpenWrt buildroot signature
