@@ -6,13 +6,16 @@
 
 include $(TOPDIR)/rules.mk
 
-LUCI_TITLE:=LuCI support for KMS
-LUCI_DEPENDS:=+vlmcsd
+LUCI_TITLE:=Luci for Airplay2 Player
+LUCI_DEPENDS:=+alsa-utils +shairport-sync-openssl
 LUCI_PKGARCH:=all
 
-PKG_NAME:=luci-app-vlmcsd
-PKG_VERSION:=1.0
-PKG_RELEASE:=7
+PKG_VERSION:=1.0.0
+PKG_RELEASE:=1
+
+define Package/luci-app-airplay2/conffiles
+/etc/config/airplay2
+endef
 
 include $(TOPDIR)/feeds/luci/luci.mk
 
