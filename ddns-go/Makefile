@@ -1,61 +1,67 @@
-# SPDX-License-Identifier: GPL-3.0-only
+# SPDX-License-Identifier: GPL-2.0-only
 #
-# Copyright (C) 2021-2023  sirpdboy  <herboy2008@gmail.com>
-# 
-# This is free software, licensed under the Apache License, Version 2.0 .
-#
+# Copyright (C) 2023 ImmortalWrt.org
 
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=ddns-go
-KG_VERSION:=5.7.0
-PKG_RELEASE:=40
+PKG_VERSION:=6.0.3
+PKG_RELEASE:=1
 
-PKG_SOURCE_PROTO:=git
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-PKG_SOURCE_URL:=https://github.com/jeessy2/ddns-go.git
-PKG_MIRROR_HASH:=skip
-PKG_SOURCE_VERSION:=1576b7bfd8272bb1dda1352919d367bab2f4ce94
+PKG_SOURCE_URL:=https://codeload.github.com/jeessy2/ddns-go/tar.gz/v$(PKG_VERSION)?
+PKG_HASH:=d6c33a1da8cf580699708939186474d2dd4424c05edbd61a8a73b37946ef288f
 
-PKG_LICENSE:=AGPL-3.0-only
+PKG_LICENSE:=MIT
 PKG_LICENSE_FILES:=LICENSE
-PKG_MAINTAINER:=herboy2008 <herboy2008@gmail.com>
+PKG_MAINTAINER:=Tianling Shen <cnsztl@immortalwrt.org>
 
 PKG_BUILD_DEPENDS:=golang/host
 PKG_BUILD_PARALLEL:=1
-PKG_USE_MIPS16:=0
 PKG_BUILD_FLAGS:=no-mips16
 
-GO_PKG:=github.com/jeessy2/ddns-go/v5
+GO_PKG:=github.com/jeessy2/ddns-go/v6
 GO_PKG_LDFLAGS_X:=main.version=$(PKG_VERSION)
 
 include $(INCLUDE_DIR)/package.mk
-include $(TOPDIR)/feeds/packages/lang/golang/golang-package.mk
+include ../../lang/golang/golang-package.mk
 
 define Package/ddns-go
-  TITLE:=A Linux web GUI client of ddns-go
   SECTION:=net
   CATEGORY:=Network
-  SUBMENU:=Web Servers/Proxies
-  DEPENDS:=$(GO_ARCH_DEPENDS) +ca-bundle
+  SUBMENU:=IP Addresses and Names
+  TITLE:=Simple and easy-to-use Dynamic DNS client
   URL:=https://github.com/jeessy2/ddns-go
+  DEPENDS:=$(GO_ARCH_DEPENDS) +ca-bundle
   USERID:=ddns-go:ddns-go
 endef
 
 define Package/ddns-go/description
-  ddns-go is a automatically obtain your public IPv4 or IPv6 address and resolve it to the corresponding domain name service,
-  support Alidns Dnspod Cloudflare Hicloud Callback Baiducloud porkbun GoDaddy Google Domains.
+  A simple and easy-to-use Dynamic DNS client with IPv6 support.
+  Supported backend:
+    - Alidns
+    - Baidu Cloud
+    - CloudFlare
+    - DnsPod
+    - GoDaddy Domains
+    - Google Domains
+    - Huawei Cloud
+    - Porkbun
+    - Custom callback
 endef
 
+define Package/ddns-go/conffiles
+/etc/config/ddns-go
+/etc/ddns-go/config.yaml
+endef
 
 define Package/ddns-go/install
 	$(call GoPackage/Package/Install/Bin,$(1))
 
-	$(INSTALL_DIR) $(1)/etc/init.d
-	$(INSTALL_BIN) ./file/ddns-go.init $(1)/etc/init.d/ddns-go
-
-	$(INSTALL_DIR) $(1)/etc/uci-defaults
-	$(INSTALL_BIN) ./file/luci-ddns-go.uci-default $(1)/etc/uci-defaults/luci-ddns-go
+	$(INSTALL_DIR) $(1)/etc/config/
+	$(INSTALL_CONF) $(CURDIR)/files/ddns-go.conf $(1)/etc/config/ddns-go
+	$(INSTALL_DIR) $(1)/etc/init.d/
+	$(INSTALL_BIN) $(CURDIR)/files/ddns-go.init $(1)/etc/init.d/ddns-go
 endef
 
 $(eval $(call GoBinPackage,ddns-go))
