@@ -149,10 +149,6 @@ friendlyarm,nanopi-r76s)
 esac
 uci commit network
 
-# disable coremark
-sed -i '/coremark/d' /etc/crontabs/root
-crontab /etc/crontabs/root
-
 # init
 devices_setup
 
